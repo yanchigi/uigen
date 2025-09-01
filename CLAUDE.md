@@ -122,3 +122,7 @@ These tools operate on the VirtualFileSystem instance and allow the AI to genera
 - Authentication is optional (supports anonymous users)
 - Database migrations are in `prisma/migrations/`
 - TypeScript aliases configured for `@/*` imports
+- Use comments sparingly. Only comment complex code.
+- The database schema is defined in the @prisma/schema.prisma file. Reference it anytime you need to understand the structure of data stored in the database.
+- when push, use "git push origin"
+- if file size is over 5Mb, don't add to Git
