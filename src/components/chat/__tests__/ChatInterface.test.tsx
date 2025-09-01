@@ -160,7 +160,7 @@ test("scrolls when messages change", () => {
   expect(messageList.textContent).toContain("2 messages");
 });
 
-test("renders with correct layout classes", () => {
+test("renders with correct layout classes for empty state", () => {
   const { container } = render(<ChatInterface />);
 
   const mainDiv = container.firstChild as HTMLElement;
@@ -170,6 +170,39 @@ test("renders with correct layout classes", () => {
   expect(mainDiv.className).toContain("p-4");
   expect(mainDiv.className).toContain("overflow-hidden");
 
+  // In empty state, the flex-1 div uses different classes
+  const messageContainer = screen.getByTestId("message-list").closest(".flex-1");
+  expect(messageContainer?.className).toContain("flex");
+  expect(messageContainer?.className).toContain("items-center");
+  expect(messageContainer?.className).toContain("justify-center");
+
+  const inputWrapper = screen.getByTestId("message-input").parentElement;
+  expect(inputWrapper?.className).toContain("mt-4");
+  expect(inputWrapper?.className).toContain("flex-shrink-0");
+});
+
+test("renders with correct layout classes for messages state", () => {
+  // Mock the chat context to return some messages
+  const mockChatContext = {
+    messages: [{ id: "1", role: "user" as const, content: "Hello" }],
+    input: "",
+    handleInputChange: vi.fn(),
+    handleSubmit: vi.fn(),
+    status: "idle" as const,
+  };
+
+  vi.mocked(useChat).mockReturnValue(mockChatContext);
+
+  const { container } = render(<ChatInterface />);
+
+  const mainDiv = container.firstChild as HTMLElement;
+  expect(mainDiv.className).toContain("flex");
+  expect(mainDiv.className).toContain("flex-col");
+  expect(mainDiv.className).toContain("h-full");
+  expect(mainDiv.className).toContain("p-4");
+  expect(mainDiv.className).toContain("overflow-hidden");
+
+  // In messages state, should use ScrollArea with overflow-hidden
   const scrollArea = screen.getByTestId("message-list").closest(".flex-1");
   expect(scrollArea?.className).toContain("overflow-hidden");
 

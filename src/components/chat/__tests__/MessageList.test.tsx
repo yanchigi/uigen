@@ -78,7 +78,35 @@ test("MessageList renders messages with parts", () => {
   render(<MessageList messages={messages} />);
 
   expect(screen.getByText("Creating your component...")).toBeDefined();
-  expect(screen.getByText("str_replace_editor")).toBeDefined();
+  expect(screen.getByText("Str Replace Editor")).toBeDefined();
+});
+
+test("MessageList renders tool invocation with user-friendly message", () => {
+  const messages: Message[] = [
+    {
+      id: "1",
+      role: "assistant",
+      content: "",
+      parts: [
+        { type: "text", text: "Creating a card component..." },
+        {
+          type: "tool-invocation",
+          toolInvocation: {
+            toolCallId: "test-123",
+            args: JSON.stringify({ command: "create", path: "/components/Card.jsx" }),
+            toolName: "str_replace_editor",
+            state: "result",
+            result: "File created successfully",
+          },
+        },
+      ],
+    },
+  ];
+
+  render(<MessageList messages={messages} />);
+
+  expect(screen.getByText("Creating a card component...")).toBeDefined();
+  expect(screen.getByText("Creating Card.jsx")).toBeDefined();
 });
 
 test("MessageList shows content for assistant message with content", () => {

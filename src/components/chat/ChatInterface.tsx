@@ -22,10 +22,28 @@ export function ChatInterface() {
     }
   }, [messages]);
 
+  if (messages.length === 0) {
+    return (
+      <div className="flex flex-col h-full p-4 overflow-hidden">
+        <div className="flex-1 flex items-center justify-center">
+          <MessageList messages={messages} isLoading={status === "streaming"} />
+        </div>
+        <div className="mt-4 flex-shrink-0">
+          <MessageInput
+            input={input}
+            handleInputChange={handleInputChange}
+            handleSubmit={handleSubmit}
+            isLoading={status === "submitted" || status === "streaming"}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full p-4 overflow-hidden">
       <ScrollArea ref={scrollAreaRef} className="flex-1 overflow-hidden">
-        <div className="pr-4">
+        <div className="pr-4 min-h-full">
           <MessageList messages={messages} isLoading={status === "streaming"} />
         </div>
       </ScrollArea>
